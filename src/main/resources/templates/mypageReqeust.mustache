@@ -1,0 +1,59 @@
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script>
+    $(document).ready(function (){
+        let total_pages = {{totalPages}};
+        let paging = document.getElementById("paging");
+        let atag = "";
+        for(let i = 0; i < total_pages; i++) {
+            atag += " [<a href='/inoxsoft/mypage/request/list?page="+i+"'>"+(i+1)+"</a>]";
+        }
+        paging.innerHTML = atag;
+    });
+    function checkApproval(approval,id) {
+        if(approval == 0) {
+            document.getElementById(id).innerText = "결재 대기";
+            document.getElementById(id).style.border = "solid 0.2px #0061f5";
+            document.getElementById(id).style.height = 'auto';
+            document.getElementById(id).style.color = "#0061f5"
+            document.getElementById(id).style.backgroundColor = '#ffffff';
+        }else if(approval == 1) {
+            document.getElementById(id).innerText = "승인 완료";
+            document.getElementById(id).style.border = "solid 0.2px #0bce7a";
+            document.getElementById(id).style.height = 'auto';
+            document.getElementById(id).style.color = "#0bce7a"
+            document.getElementById(id).style.backgroundColor = '#ffffff';
+        }else {
+            document.getElementById(id).innerText = "신청 반려";
+            document.getElementById(id).style.border = "solid 0.2px #c02a38";
+            document.getElementById(id).style.height = 'auto';
+            document.getElementById(id).style.color = "#c02a38"
+            document.getElementById(id).style.backgroundColor = '#ffffff';
+        }
+    }
+</script>
+<h2>연차 신청 리스트</h2>
+<hr>
+{{#requestList}}
+<table  style="padding: 30px !important;">
+    <tr style="height: 50px !important; width: 900px !important; ">
+        <td style="width: 450px !important; font-size: large  !important;">
+            <a style="color: #6b6a6a; font-weight: inherit;" href="/inoxsoft/leave/list/read?rno={{rno}}">{{title}} </a>
+        </td>
+<!--        <td style="width: 200px !important; font-size: large  !important;">
+            {{writer}}
+        </td>-->
+        <td style="width: 200px !important; font-size: large  !important;">
+            {{req_date}}
+        </td>
+        <td  style="width: 50px !important;">
+            <button style="width: 80px; height: 30px;" id="CheckApproval{{rno}}">
+                <script>
+                    checkApproval({{approval}},'CheckApproval{{rno}}');
+                </script>
+            </button>
+        </td>
+    </tr>
+</table>
+{{/requestList}}
+<div style="padding: 2px; position: absolute; top: 650px; left: 300px; color: #6b6a6a;" class="page-number" id="paging">
+</div>

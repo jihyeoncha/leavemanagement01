@@ -1,0 +1,21 @@
+<h3>[{{name}}]연차 현황 리스트</h3>
+<hr>
+<table style="padding: 30px !important;">
+    <tr style="height: 20px !important; width: 900px !important; background-position: center;">
+        <th style="width: 200px !important; font-size: large  !important; text-align: center;">날짜</th>
+        <th style="width: 230px !important; font-size: large  !important; text-align: center;">총 연차</th>
+        <th style="width: 230px !important; font-size: large  !important; text-align: center;">사용 연차</th>
+        <th style="width: 230px !important; font-size: large  !important; text-align: center;">남은 연차</th>
+    </tr>
+</table>
+<hr style="border: 0; height: 1px; background-color: #6b6a6a;">
+{{#employeeDTOList}}
+    <table style="padding: 30px !important;">
+        <tr style="height: 40px !important; width: 800px !important; background-position: center;">
+            <td style="width: 200px !important; font-size: medium  !important; text-align: center;">{{month}}</td>
+            <td style="width: 230px !important; font-size: medium  !important; text-align: center;">{{tnumber}}</td>
+            <td style="width: 230px !important; font-size: medium  !important; text-align: center;">{{unumber}}</td>
+            <td style="width: 230px !important; font-size: medium  !important; text-align: center;">{{lnumber}}</td>
+        </tr>
+    </table>
+{{/employeeDTOList}}

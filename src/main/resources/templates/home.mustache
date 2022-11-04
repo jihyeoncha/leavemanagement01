@@ -1,0 +1,173 @@
+
+<!--<h3 id="calenderBox">연차일정</h3>-->
+<!-- jquery CDN -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- fullcalendar CDN -->
+<link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.css' rel='stylesheet' />
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.js'></script>
+<!-- fullcalendar 언어 CDN -->
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/locales-all.min.js'></script>
+<script>
+    $(document).ready(function (){
+        if({{user.mno}} == 99 ) {
+            $('#request-button').hide();
+        }
+    });
+</script>
+<style>
+    .fc-col-header-cell.fc-day.fc-day-mon a  {
+        text-decoration: none;
+        text-decoration-line: none;
+        color:#2b2b2b;
+    }
+    .fc-col-header-cell.fc-day.fc-day-tue a  {
+        text-decoration: none;
+        text-decoration-line: none;
+        color:#2b2b2b;
+    }
+    .fc-col-header-cell.fc-day.fc-day-wed a  {
+        text-decoration: none;
+        text-decoration-line: none;
+        color:#2b2b2b;
+    }
+    .fc-col-header-cell.fc-day.fc-day-thu a  {
+        text-decoration: none;
+        text-decoration-line: none;
+        color:#2b2b2b;
+    }
+    .fc-col-header-cell.fc-day.fc-day-fri a  {
+        text-decoration: none;
+        text-decoration-line: none;
+        color:#2b2b2b;
+    }
+    .fc-col-header-cell.fc-day.fc-day-sat a {
+        text-decoration: none;
+        text-decoration-line: none;
+        color: #2727e0 !important;
+    }
+    .fc-col-header-cell.fc-day.fc-day-sun a {
+        text-decoration: none;
+        text-decoration-line: none;
+        color:#FF0000 !important;
+    }
+    .fc-daygrid-day.fc-day.fc-day-mon a{
+        text-decoration: none;
+        text-decoration-line: none;
+        color: #2b2b2b !important;
+    }
+    .fc-daygrid-day.fc-day.fc-day-tue a{
+        text-decoration: none;
+        text-decoration-line: none;
+        color: #2b2b2b !important;
+    }
+    .fc-daygrid-day.fc-day.fc-day-wed a{
+        text-decoration: none;
+        text-decoration-line: none;
+        color: #2b2b2b !important;
+    }
+    .fc-daygrid-day.fc-day.fc-day-thu a{
+        text-decoration: none;
+        text-decoration-line: none;
+        color: #2b2b2b !important;
+    }
+    .fc-daygrid-day.fc-day.fc-day-fri a{
+        text-decoration: none;
+        text-decoration-line: none;
+        color: #2b2b2b !important;
+    }
+    .fc-daygrid-day.fc-day.fc-day-sat a{
+        text-decoration: none;
+        text-decoration-line: none;
+        color: #2727e0 !important;
+    }
+    .fc-daygrid-day.fc-day.fc-day-sun a{
+        text-decoration: none;
+        text-decoration-line: none;
+        color:#FF0000 !important;
+    }
+
+    #calendar-container {
+        text-align: -webkit-center;
+    }
+
+    #calendar {
+        max-width: 900px;
+    }
+</style>
+<div class="container" style="text-align: center;">
+    <h2 id="leaveBox">연차현황</h2>
+    <div id="adminLeaveBox">
+        <div style="font-size: 40px;" id="RequestNumber">
+            &nbsp;&nbsp;<a style="text-decoration-line: none; color:#0d6efd; font-weight: bold;" href="/inoxsoft/leave">{{first}}</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <a style="text-decoration-line: none; color:#b02a37; font-weight: bold;" href="/inoxsoft/leave/list/approval/yet">{{second}}</a> &nbsp;&nbsp;&nbsp;&nbsp;
+            <a style="text-decoration-line: none; color:#198754; font-weight: bold;" href="/inoxsoft/leave/list/approval">{{third}}</a>    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </div>
+        <div style="font-size: large;" id="RequestName">
+            &nbsp;&nbsp;&nbsp;휴가 신청서        &nbsp;&nbsp;&nbsp;&nbsp;
+            결재 대기        &nbsp;&nbsp;&nbsp;&nbsp;
+            결재 완료        &nbsp;&nbsp;&nbsp;&nbsp;
+        </div>
+    </div>
+    <div id="employeeLeaveBox">
+        <div style="font-size: 36px;" id="RequestNumber">
+            <b style="color:#0d6efd; font-weight: bold;">{{first}}</b>&nbsp;&nbsp;&nbsp;&nbsp;
+            <b style="color:#b02a37; font-weight: bold;">{{second}}</b> &nbsp;&nbsp;&nbsp;&nbsp;
+            <b style="color:#198754; font-weight: bold;">{{third}}</b>
+        </div>
+        <div style="font-size: large;" id="RequestName">
+            남은 연차        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            사용 연차 &nbsp;&nbsp;&nbsp;&nbsp;       &nbsp;&nbsp;&nbsp;&nbsp;
+            총  연차
+        </div>
+    </div>
+</div>
+<div id="request-button" class="container" style="text-align: center; padding: 20px;">
+    <button style="width:95%; max-width: 500px; height: 35px; padding: 2px; margin-left: 2%; background-color: steelblue;" onclick="location.href='/inoxsoft/leave/request'">연차 신청</button><br>
+</div>
+<br>
+<body style="padding:30px;">
+<!-- calendar 태그 -->
+<div id='calendar-container'>
+    <div id='calendar'></div>
+</div>
+<script>
+    function getCalendarDataInDB(){
+        var arr = [{title: 'evt1', start:'ssssss' , backgroundColor:"RGB", borderColor : "rgb"}, {title: 'evt2', start:'123123123', backgroundColor:"RGB" , borderColor : "rgb"}];
+
+        $.ajax({
+            contentType:'application/json',
+            dataType:'json',
+            url:'/inoxsoft/leave/calendar',
+            type:'post',
+            async: false,
+            success:function(resp){
+                arr = resp;
+            },
+            error:function(){
+                alert('저장 중 에러가 발생했습니다. 다시 시도해 주세요.');
+            }
+        });
+        return arr;
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            height: '600px', // calendar 높이 설정
+            headerToolbar: {
+                left: 'prev,next',
+                center: 'title',
+                right: 'today'
+            }
+            //initialDate: '2021-01-01'
+            , editable : false
+            , locale: 'ko'
+        });
+        var arr = getCalendarDataInDB();
+        $.each(arr, function(index, item){
+            calendar.addEvent( item );
+        });
+        calendar.render();
+    });
+</script>

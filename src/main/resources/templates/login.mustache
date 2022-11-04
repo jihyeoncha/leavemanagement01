@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <title>INOXSOFT</title>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+</head>
+<style>
+    @media (max-width: 767px){
+/*        img {
+            width: 100%;
+            height: auto;
+            padding: 2%;
+        }
+        input {
+            width: 100%;
+            height: auto;
+            padding: 2%;
+        }
+        button {
+            width: 100%;
+            height: auto;
+            padding: 2%;
+        }*/
+    }
+
+    @font-face {
+        font-family: 'Cafe24SsurroundAir';
+        src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2105_2@1.0/Cafe24SsurroundAir.woff') format('woff');
+        font-weight: bold;
+        font-style: normal;
+    }
+    * {
+        font-family: 'Cafe24SsurroundAir';
+    }
+/*    body {
+        padding: 30px !important;
+    }*/
+
+    form {
+        margin-left: -3px;
+    }
+    button {
+        border: none;
+        background-color: #2C3E50;
+        opacity: .65;
+        color: #fff;
+        border-radius: 0.25em;
+    }
+    button:after {
+        position: absolute;
+        content: "";
+        width: 0;
+        height: 100%;
+        top: 0;
+        left: 0;
+        direction: rtl;
+        z-index: -1;
+        box-shadow:
+                -7px -7px 20px 0px #fff9,
+                -4px -4px 5px 0px #fff9,
+                7px 7px 20px 0px #0002,
+                4px 4px 5px 0px #0001;
+        transition: all 0.3s ease;
+    }
+    input#email{
+        width: 340px;
+        height: 50px;
+        border: 0;
+        border-radius: 5px;
+        outline: none;
+        padding-left: 10px;
+        background-color: rgb(233, 233, 233);
+        margin-top: 5px;
+    }
+    input#pw{
+        width: 340px;
+        height: 50px;
+        border: 0;
+        border-radius: 5px;
+        outline: none;
+        padding-left: 10px;
+        background-color: rgb(233, 233, 233);
+        margin-top: 5px;
+    }
+</style>
+<body>
+    <script>
+        window.onload = function () {
+            let id = localStorage.getItem("saveId");
+            if(id) {
+                //document.write(id);
+                $('input[name=email]').attr('value',id);
+            }
+        }
+
+
+        function enterPress(e) {
+            if(e.keyCode == 13) {
+                inserCheck();
+            }
+        }
+        function inserCheck() {
+            let form = document.loginF1;
+            let email = form.email.value;
+            if(!email) {
+                alert("이메일을 입력하세요.")
+                form.email.focus();
+                return false;
+            }
+            let exptext = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/;
+            if(!exptext.test(email)) {
+                alert("이메일 형식으로 입력하세요.")
+                form.email.focus();
+                return false;
+            }
+            if(!form.pw.value) {
+                alert("비밀번호를 입력하세요.")
+                form.pw.focus();
+                return false;
+            }
+            loginChk();
+        }
+
+        function loginChk() {
+            let saveIdCheck = $('#save_id:checked').val();
+
+            if(saveIdCheck == 'on') {
+                localStorage.setItem("saveId", $("input[name=email]").val());
+            }
+            let succ = 0;
+            $.ajax({
+                type : "POST",
+                url : "/inoxsoft/login.do",
+                contentType : "application/json",
+                async:false,
+                data : JSON.stringify({
+                    email : $("input[name=email]").val(),
+                    pw : $("input[name=pw]").val()
+                }),
+                success : function (result) {
+                    if(result == 0) {
+                        alert("아이디와 비밀번호를 확인해주세요.");
+                    }else if(result == 9) {
+                        alert("통신오류");
+                    }else if(result == 2) {
+                        alert("사용 만료된 계정입니다.");
+                    }else {
+                        succ = 1;
+                    }
+                }
+            });
+            if(succ == 1) {
+                location.href="/inoxsoft/home";
+            }
+        }
+    </script>
+    <div style="text-align: center; margin-top: 10%">
+    <img style="height:100px ; width: 340px;" src="/static/img/logo.png">
+    <!--<h1>INOXSOFT</h1>-->
+    <form id = "loginF1" name="loginF1">
+        <input type="text" name="email" id="email" placeholder="Email" onkeyup="enterPress(event)"></br>
+        <input type="password" name="pw" id="pw" placeholder="Password" onkeyup="enterPress(event)"></br>
+        <div style="position: relative; left: -120px;" class="save_id">
+            <input type="checkbox" id="save_id"/>
+            <lable for="save_id">아이디 저장</lable>
+        </div>
+        <button style="letter-spacing: 5px; font-weight: bold; height: 60px; width: 350px; font-size: x-large !important;" type="button" onclick="inserCheck()">LOGIN</button>
+    </form>
+    </div>
+</body>
+</html>

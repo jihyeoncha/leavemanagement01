@@ -1,0 +1,165 @@
+<style>
+    /* The switch - the box around the slider */
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 50px;
+        height: 25px;
+        vertical-align:middle;
+    }
+
+    /* Hide default HTML checkbox */
+    .switch input {display:none;}
+
+    /* The slider */
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+    input:checked + .slider {
+        background-color: #2196F3;
+    }
+
+    input:focus + .slider {
+        box-shadow: 0 0 1px #2196F3;
+    }
+
+    input:checked + .slider:before {
+        -webkit-transform: translateX(26px);
+        -ms-transform: translateX(26px);
+        transform: translateX(26px);
+    }
+
+    /* Rounded sliders */
+    .slider.round {
+        border-radius: 34px;
+    }
+
+    .slider.round:before {
+        border-radius: 50%;
+        width: 15px;
+        height: 15px;
+        margin-bottom: 1px;
+    }
+
+    p {
+        margin:0px;
+        display:inline-block;
+        font-size:15px;
+        font-weight:bold;
+    }
+</style>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    function getParameterByName(name) {
+        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+                results = regex.exec(location.search);
+        return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    }
+    $(function () {
+        let dno = getParameterByName('dno');
+        if(dno == 0) {
+            $("#dno-select").val("0").attr("selected", "selected");
+        }else if(dno == 1) {
+            $("#dno-select").val("1").attr("selected", "selected");
+        }else if(dno == 2) {
+            $("#dno-select").val("2").attr("selected", "selected");
+        }else {
+            $("#newEmployee").hide();
+        }
+        $("select[name=dno]").change(function(){
+            console.log($(this).val()); //value값 가져오기
+            var selectDno = $(this).val();
+            location.replace("/inoxsoft/employee?dno=" +  selectDno);
+        });
+        $("input:checkbox").on('click', function() {
+            let activate = 0;
+            let mno = $(this).attr("id");
+            if ($(this).prop('checked')) {
+                alert("활성화 합니다");
+            } else {
+                activate = 1;
+                alert("비활성화 합니다");
+            }
+            location.replace("/inoxsoft/employee/activate?mno=" +  mno + "&activate=" + activate);
+        });
+    });
+    function newEmployee() {
+        let dno = $("#dno-select").val();
+        location.replace("/inoxsoft/employee/register?dno=" +  dno);
+    }
+
+    function checkActivate(activate, id) {
+        let checkbox = document.getElementById(id);
+        if(activate == 0) {
+            checkbox.checked = true;
+        }
+    }
+</script>
+<div style="display: inline-block;"><h2>직원관리</h2></div>
+<div style="display: inline-block; float: right; margin-top: 35px !important;">
+    <select style="width:180px;height:40px; font: menu;"  name="dno" id="dno-select">
+        <option value="3">전체</option>
+        <option value="0">경영지원본부</option>
+        <option value="1">GxP사업본부</option>
+        <option value="2">ICT사업본부</option>
+    </select>
+</div>
+<hr>
+<table style="padding: 30px !important;">
+    <tr style="height: 20px !important; width: 900px !important; background-position: center;">
+        <td style="width: 100px !important; font-size: large  !important; text-align: center;">이름</td>
+        <td style="width: 120px !important; font-size: large  !important; text-align: center;">총 연차</td>
+        <td style="width: 120px !important; font-size: large  !important; text-align: center;">사용 연차</td>
+        <td style="width: 120px !important; font-size: large  !important; text-align: center;">남은 연차</td>
+        <td style="width: 300px !important; font-size: large  !important; text-align: center;">연차 기준일</td>
+        <td style="width: 120px !important; font-size: large  !important; text-align: center;">상세보기</td>
+    </tr>
+</table>
+<hr style="border: 0; height: 1px; background-color: #6b6a6a;">
+{{#leaveDTOList}}
+    <table style="padding: 30px !important;">
+        <tr style="height: 40px !important; width: 900px !important; background-position: center;">
+            <td style="width: 110px !important; font-size: medium  !important; text-align: center;">
+                {{name}}
+                <label class="switch">
+                    <input id="{{mno}}" type="checkbox">
+                    <span class="slider round"></span>
+                </label>
+                <script>
+                    checkActivate({{activate}}, '{{mno}}');
+                </script>
+            </td>
+            <td style="width: 113px !important; font-size: medium  !important; text-align: center;">{{tnumber}}</td>
+            <td style="width: 113px !important; font-size: medium  !important; text-align: center;">{{unumber}}</td>
+            <td style="width: 113px !important; font-size: medium  !important; text-align: center;">{{lnumber}}</td>
+            <td style="width: 310px !important; font-size: medium  !important; text-align: center;">{{period}}</td>
+            <td style="width: 110px !important; font-size: medium  !important; text-align: center;"><button onclick="location.href='/inoxsoft/employee/details?mno={{mno}}'">상세보기</button></td>
+        </tr>
+    </table>
+{{/leaveDTOList}}
+<hr>
+<button style="float: right; font-size: large; width: 80px; height: auto;" id="newEmployee" onclick="newEmployee();">직원 등록</button>
+

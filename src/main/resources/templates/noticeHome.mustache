@@ -1,0 +1,90 @@
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+
+<script>
+    $(document).ready(function (){
+        $('#writeButton').hide();
+        if({{user.mno}} == 99 ) {
+            $('#writeButton').show();
+        }
+
+        /* //페이지 번호로 나타내는 소스
+        let total_pages = {{totalPages}};
+        let paging = document.getElementById("paging");
+        let atag = "";
+        for(let i={{startPage}}; i<{{endPage}}; i++){
+            atag += " [<a href='/inoxsoft/notice?page="+i+"' id='act'>"+(i+1)+"</a>]";
+        }
+        paging.innerHTML = atag;
+        console.log("atag : " + atag);
+        */
+
+        /* paging 처리영역 */
+        //previous
+        let pre_page = document.getElementById("pre_page");
+        if({{hasPrev}} == false) {
+            let prev_img = document.getElementById("prev_img");
+            prev_img.style.display="none";
+        }
+
+        //next
+        let next_page = document.getElementById("next_page");
+        if({{hasNext}} == false) {
+            let next_img = document.getElementById("next_img");
+            next_img.style.display="none";
+        }
+
+    });
+
+</script>
+
+<style>
+    table {
+        width: 100%;
+        max-width: 1100px;
+    }
+    table tr {
+        height: 50px;
+    }
+    table tr td {
+        font-size: large;
+    }
+    li {
+        list-style: none;
+    }
+</style>
+<h2>공지사항</h2>
+<hr>
+<table>
+    {{#noticeList}}
+        <tr>
+            <td style="width: 45%;">
+                <a style="color: #6b6a6a;" href="/inoxsoft/notice/read?bno={{bno}}">{{title}}</a>
+            </td>
+            <td style="width: 16%;">
+                {{writer}}
+            </td>
+            <td style="width: 22%;">
+                {{reg_date}}
+            </td>
+        </tr>
+    {{/noticeList}}
+</table>
+<br>
+
+<ul style="margin-left:25%;">
+    <!-- previous -->
+    <li style="padding: 2px 2% 0 0;" id="pre_page">
+        <a href="/inoxsoft/notice?page={{previous}}"><img style="width: 20px;" src="/static/img/left.png" id="prev_img"></a>
+    </li>
+
+    <!-- page-number -->
+    <!--<li style="padding: 3px 2% 0 0;" class="page-number" id="paging"></li>-->
+    <li style="padding: 3px 2% 0 0;">페이지 {{nowPage}}</li>
+
+    <!-- next -->
+    <li id="next_page">
+        <a href="/inoxsoft/notice?page={{next}}"><img style="width: 20px;" src="/static/img/next.png" id="next_img"></a>
+    </li>
+</ul>
+
+<button style="width: 80px; height: 30px; position: relative; margin-left: 75%" id="writeButton" type=button onclick="location.href = '/inoxsoft/notice/write'">글쓰기</button>

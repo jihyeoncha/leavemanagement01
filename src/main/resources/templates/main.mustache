@@ -1,0 +1,58 @@
+{{>header}}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    window.onload = function () {
+        $("#navigation-list").hide();
+        $(".menuButton").click(function () {
+            $("#navigation-list").slideToggle(300);
+        });
+        let path = window.location.pathname;
+        if({{user.mno}} == 99 ) {
+            document.getElementById("mypagePath").style.display="none";
+            if(path.includes("home")) {
+                document.getElementById("leaveBox").innerText="연차 신청 현황";
+                document.getElementById("employeeLeaveBox").style.display = "none";
+            }
+            if(path == "/inoxsoft/leave") {
+                document.getElementById("request-button").style.display="none";
+            }
+        }else {
+            document.getElementById("employeePath").style.display="none";
+            if(path.includes("home")) {
+                document.getElementById("adminLeaveBox").style.display = "none";
+            }
+        }
+        if(path.includes("home")) {
+            document.getElementById("homePath").style.textDecorationLine="underline";
+        }else if(path.includes("notice")) {
+            document.getElementById("noticePath").style.textDecorationLine="underline";
+        }else if(path.includes("leave")) {
+            document.getElementById("leavePath").style.textDecorationLine="underline";
+        }else if(path.includes("mypage")) {
+            document.getElementById("mypagePath").style.textDecorationLine="underline";
+        }else if(path.includes("employee")) {
+            document.getElementById("employeePath").style.textDecorationLine="underline";
+        }
+    }
+</script>
+<style>
+    #leftContent {
+        position: absolute;
+        top: 1px;
+        background-color: white;
+        width: 100%;
+        border-bottom: inset;
+    }
+    #middleContent {
+        position: relative;
+        width: 100%;
+        margin-top: 50px;
+    }
+</style>
+<div id="middleContent">
+    {{>middle}}
+</div>
+<div id="leftContent">
+    {{>left}}
+</div>
+{{>footer}}

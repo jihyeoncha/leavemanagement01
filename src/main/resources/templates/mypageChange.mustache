@@ -1,0 +1,94 @@
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script>
+    function ChangePwCheck() {
+        let form = document.PwF1;
+        if(!form.oldPw.value) {
+            alert("기존 비밀번호를 입력하세요.")
+            form.oldPw.focus();
+            return false;
+        }else {
+            let check = oldPwChk();
+            if(check != 1) {
+                return false;
+            }
+        }
+        if(!form.newPw.value) {
+            alert("비밀번호를 입력하세요.")
+            form.newPw.focus();
+            return false;
+        }
+        if(!form.newPwCheck.value) {
+            alert("비밀번호를 입력하세요.")
+            form.newPwCheck.focus();
+            return false;
+        }
+        if(form.newPw.value != form.newPwCheck.value) {
+            alert("새로운 비밀번호가 서로 일치하지 않습니다. ")
+            form.newPw.focus();
+            return false;
+        }
+        form.submit();
+    }
+
+    function oldPwChk() {
+        let succ = 0;
+        $.ajax({
+            type : "POST",
+            url : "/inoxsoft/mypage/change/oldPwCheck",
+            contentType : "application/json",
+            async:false,
+            data : JSON.stringify({
+                oldPw : $("input[name=oldPw]").val()
+            }),
+            success : function (result) {
+                if(result == 0) {
+                    alert("기존 비밀번호가 맞지 않습니다.");
+                    document.PwF1.oldPw.focus();
+                }else if(result == 9) {
+                    alert("통신오류");
+                }else {
+                    succ = 1;
+                }
+            }
+        });
+        return succ;
+    }
+</script>
+<style>
+    input {
+        width: 180px;
+        height: 40px;
+        border: 0;
+        border-radius: 5px;
+        outline: none;
+        padding-left: 10px;
+        background-color: rgb(233, 233, 233);
+        margin-top: 5px;
+    }
+</style>
+<h2>비밀번호 변경하기</h2>
+<hr>
+<form id="PwF1" name = "PwF1" method="post" action="/inoxsoft/mypage/change/submit">
+    <table>
+        <tr>
+            <th style="width: 150px;">기존 비밀번호</th>
+            <td>
+                <input type="password" name="oldPw" id="oldPw">
+            </td>
+        </tr>
+        <tr>
+            <th style="width: 150px;">새로운 비밀번호</th>
+            <td>
+                <input type="password" name="newPw" id="newPw">
+            </td>
+        </tr>
+        <tr>
+            <th style="width: 150px;">새로운 비밀번호 확인</th>
+            <td>
+                <input type="password" name="newPwCheck" id="newPwCheck">
+            </td>
+        </tr>
+    </table>
+    <hr>
+    <button style="width:80px; height: 30px; position: relative; left: 300px;" type="button" onclick="ChangePwCheck()">변경하기</button>
+</form>

@@ -1,0 +1,125 @@
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<!--<link rel="stylesheet" type="text/css" href="/static/css/datepicker2.css">
+<script src="/static/js/jquery-1.11.1.js"></script>
+<script src="/static/js/jquery-2.1.1.js"></script>
+<script src="/static/js/jquery-ui-1.11.1.js"></script>
+<script src="/static/js/prettify.js"></script>
+<script src="/static/js/jquery-ui.multidatespicker.js"></script>-->
+
+<script>
+    $(function() {
+        $('#yesButton').hide();
+        $('#noButton').hide();
+        $('#delButton').hide();
+        if({{user.mno}} == 99 ) {
+            if({{aRequest.approval}} == 0) {
+                $('#yesButton').show();
+                $('#noButton').show();
+                $('#delButton').show();
+            }else if({{aRequest.approval}} == 1){
+                $('#noButton').show();
+            }else if({{aRequest.approval}} == 2) {
+                $('#yesButton').show();
+                $('#delButton').show();
+            }
+        }else if({{user.mno}} == {{aRequest.mno}}) {
+            if({{aRequest.approval}} == 0) {
+                $('#delButton').show();
+            }
+        }
+        if({{aRequest.approval}} == 0) {
+            document.getElementById('yesOrNo').innerText = "결재 대기";
+        }else if({{aRequest.approval}} == 1) {
+            document.getElementById('yesOrNo').innerText = "승인 완료";
+        }else if({{aRequest.approval}} == 2) {
+            document.getElementById('yesOrNo').innerText = "신청 반려";
+        }
+    });
+    function delClick() {
+        let check = confirm("정말 삭제하시겠습니까?");
+        if(check) {
+            location.href="/inoxsoft/leave/list/read/delete?rno={{aRequest.rno}}";
+        }
+    }
+    function yesClick() {
+        let check = confirm("승인하시겠습니까?");
+        if(check) {
+            location.href="/inoxsoft/leave/list/read/yes?rno={{aRequest.rno}}";
+        }
+    }
+    function noClick() {
+        let check = confirm("반려하시겠습니까?");
+        if(check) {
+            location.href="/inoxsoft/leave/list/read/no?rno={{aRequest.rno}}";
+        }
+    }
+</script>
+{{#aRequest}}
+<table style="padding: 30px !important;">
+    <tr style="height: 30px !important; width: 800px !important; ">
+        <td style="font-size: x-large;">
+            {{title}}
+        </td>
+    </tr>
+</table>
+<hr>
+<table style="padding: 30px !important;">
+    <tr style="height: 20px !important; width: 800px !important; ">
+<!--        <th style="width: 150px !important; font-size: medium  !important;">
+            <b>신청인</b>
+        </th>-->
+        <td style="width: 550px !important; font-size: medium  !important;">
+            {{writer}}
+        </td>
+    </tr>
+    <tr style="height: 20px !important; width: 800px !important; ">
+<!--        <th style="width: 150px !important;">
+            <b>신청일</b>
+        </th>-->
+        <td style="width: 550px !important;">
+            {{req_date}}
+        </td>
+    </tr>
+</table>
+<hr>
+<table style="padding: 30px !important;">
+    <tr style="height: 40px !important; width: 800px !important; ">
+        <td style="width: 150px !important; font-size: large;">
+            휴가 기간
+        </td>
+        <td style="width: 550px !important;">
+            {{leaveDate}} ( 사용 {{count}}개 )
+        </td>
+    </tr>
+    <tr style="height: 40px !important; width: 800px !important; ">
+        <td style="width: 150px !important; font-size: large;">
+            휴가 구분
+        </td>
+        <td style="width: 550px !important;">
+           {{leaveType}}
+        </td>
+    </tr>
+    <tr style="height: 40px !important; width: 800px !important; ">
+        <td style="width: 150px !important; font-size: large;">
+            사유
+        </td>
+        <td style="width: 550px !important;">
+            {{reason}}
+        </td>
+    </tr>
+    <tr style="height: 40px !important; width: 800px !important; ">
+        <td style="width: 150px !important; font-size: large;">
+            결재 여부
+        </td>
+        <td  style="width: 550px !important;" id="yesOrNo">
+            {{approval}}
+        </td>
+    </tr>
+</table>
+{{/aRequest}}
+<hr>
+<div style="float:right;">
+<button style="background-color: #ffffff !important; border: solid 0.2px #0bce7a; color:  #0bce7a; height: auto; width: 80px; height: 30px; " id="yesButton" onclick="yesClick()">승인</button>
+<button style="background-color: #ffffff !important; border: solid 0.2px #c02a38; color:  #c02a38; height: auto; width: 80px; height: 30px;" id="noButton" onclick="noClick()">반려</button>
+<button style="background-color: #ffffff !important; border: solid 0.2px #2C3E50;color:  #2C3E50; height: auto; width: 80px; height: 30px;" id="delButton" onclick="delClick()">삭제</button>
+</div>

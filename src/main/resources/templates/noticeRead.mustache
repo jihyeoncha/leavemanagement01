@@ -1,0 +1,52 @@
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script>
+    $(document).ready(function (){
+        $('#modButton').hide();
+        $('#delButton').hide();
+        if({{user.mno}} == 99 ) {
+            $('#modButton').show();
+            $('#delButton').show();
+        }
+    });
+    function delClick() {
+        let check = confirm("정말 삭제하시겠습니까?");
+        if(check) {
+            location.href="/inoxsoft/notice/delete?bno={{aNotice.bno}}";
+        }
+    }
+</script>
+{{#aNotice}}
+<table>
+    <tr>
+        <td style="font-size: x-large;">
+            {{title}}
+        </td>
+    </tr>
+</table>
+<hr>
+<table>
+    <tr>
+        <td style="font-size: medium;">
+            {{writer}}
+        </td>
+    </tr>
+    <tr>
+        <td style="font-size: medium;">
+            {{reg_date}} | 읽음 : {{views}}
+        </td>
+    </tr>
+</table>
+<hr>
+<table>
+    <tr>
+        <td>
+            {{{content}}}
+        </td>
+    </tr>
+</table>
+{{/aNotice}}
+<hr>
+<div style="float:right;">
+    <button style="background-color: #ffffff !important; border: solid 0.2px #c02a38; color:  #c02a38; height: auto; width: 80px; height: 30px;" id="modButton" onclick="location.href='/inoxsoft/notice/modify?bno={{aNotice.bno}}'">수정</button>
+    <button style="background-color: #ffffff !important; border: solid 0.2px #2C3E50;color:  #2C3E50; height: auto; width: 80px; height: 30px;" id="delButton" onclick="delClick()">삭제</button>
+</div><br>

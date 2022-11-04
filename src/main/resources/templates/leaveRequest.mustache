@@ -1,0 +1,119 @@
+<!--<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">-->
+<!--<link rel="stylesheet" href="http://jqueryui.com/resources/demos/style.css">-->
+<link rel="stylesheet" type="text/css" href="/static/css/datepicker2.css">
+<!--<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>-->
+<script src="/static/js/jquery-1.11.1.js"></script>
+<script src="/static/js/jquery-2.1.1.js"></script>
+<script src="/static/js/jquery-ui-1.11.1.js"></script>
+<!--<script src="/static/js/lang-css.js"></script>-->
+<script src="/static/js/prettify.js"></script>
+<script src="/static/js/jquery-ui.multidatespicker.js"></script>
+<!--<script src="https://code.jquery.com/jquery-1.12.4.js"></script>-->
+<!--<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>-->
+
+
+<script>
+    $(function() {
+        //input을 datepicker로 선언
+        $("#datepicker").multiDatesPicker({
+            dateFormat: 'yymmdd' //Input Display Format 변경
+            /*,showOtherMonths: true //빈 공간에 현재월의 앞뒤월의 날짜를 표시*/
+            ,showMonthAfterYear:true //년도 먼저 나오고, 뒤에 월 표시
+/*            ,changeYear: true //콤보박스에서 년 선택 가능
+            ,changeMonth: true //콤보박스에서 월 선택 가능*/
+            ,buttonImage: "http://jqueryui.com/resources/demos/datepicker/images/calendar.gif" //버튼 이미지 경로
+            ,buttonImageOnly: true //기본 버튼의 회색 부분을 없애고, 이미지만 보이게 함
+            ,yearSuffix: "년" //달력의 년도 부분 뒤에 붙는 텍스트
+            ,monthNamesShort: ['1','2','3','4','5','6','7','8','9','10','11','12'] //달력의 월 부분 텍스트
+            ,monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'] //달력의 월 부분 Tooltip 텍스트
+            ,dayNamesMin: ['일','월','화','수','목','금','토'] //달력의 요일 부분 텍스트
+            ,dayNames: ['일요일','월요일','화요일','수요일','목요일','금요일','토요일'] //달력의 요일 부분 Tooltip 텍스트
+            ,minDate: "0" //최소 선택일자(-1D:하루전, -1M:한달전, -1Y:일년전)
+            ,onSelect: function () {
+                let dates = $("#datepicker").multiDatesPicker("getDates");
+                document.getElementById("countBox").value = dates.length;
+            }
+        });
+    });
+
+    function submit() {
+        let count = document.getElementById("countBox").value;
+        if(count > 0) {
+            if(count > {{annual.lnumber}}) {
+                alert("잔여 연차가 초과되어 신청할 수 없습니다.")
+                return false;
+            }
+        }else {
+            alert("휴가 기간을 선택하세요.")
+            return false;
+        }
+
+        let dates = $("#datepicker").multiDatesPicker("getDates");
+        const datesString = dates.join('/');
+        console.log(datesString);
+        let form = $('#requestForm');
+        document.getElementById("datepickerDates").value = datesString;
+        form.submit();
+    }
+</script>
+<style>
+    table tr th {
+        width: 20%;
+        min-width: 35px;
+        text-align: center;
+    }
+    table tr td {
+        padding-left: 10px;
+    }
+</style>
+</head>
+<body>
+<h2>휴가 신청서</h2>
+<hr>
+<form method="post" action="/inoxsoft/leave/request/submit" id="requestForm">
+    <table>
+        <tr style="height: 40px">
+            <th>현황</th>
+            <td>
+                잔여 : {{annual.lnumber}} &nbsp; / &nbsp;사용 : {{annual.unumber}} &nbsp;/&nbsp; 전체 : {{annual.tnumber}}
+            </td>
+        </tr>
+        <tr style="height: 40px">
+            <th>작성일</th>
+            <td>{{today}}</td>
+        </tr>
+        <tr style="height: 40px">
+            <th>기간</th>
+            <td>
+                <div style="display: inline-block;" id="datepicker"></div>
+                <div style="display: inline-block; position: inherit; top: 150px;">
+                    &nbsp;&nbsp;날짜를 클릭하여 아래 선택 일수를 확인하세요.<br>
+                    &nbsp;&nbsp;선택 일수 : <input style="border: none;" id="countBox" type="text" name="leave_count" value="0" readonly>
+                    <input type="hidden" name="dates" id="datepickerDates" value="">
+                </div>
+            </td>
+        </tr>
+        <tr style="height: 40px">
+            <th>종류</th>
+            <td>
+                <select style="width: 120px; border: none; font: menu;" name="type">
+                    <option value="day_off">연차</option>
+                    <option value="mon_off">월차</option>
+                    <option value="half_day">오전반차</option>
+                    <option value="half_after">오후반차</option>
+                    <option value="official">공가</option>
+                    <option value="sub_off">대체휴가</option>
+                </select>
+            </td>
+        </tr>
+        <tr style="height: 40px">
+            <th>사유</th>
+            <td>
+                <input style="width: 500px; border-top: none; border-left: none; border-right: none; border-bottom: 1px solid #4f5050;" type="text" name="reason">
+            </td>
+        </tr>
+    </table>
+</form>
+<hr>
+<button style="width: 80px;height: 30px; position: relative; margin-left: 75%;" onclick="submit()">신청</button>
+

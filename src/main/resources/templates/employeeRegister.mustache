@@ -1,0 +1,100 @@
+<link rel="stylesheet" type="text/css" href="/static/css/datepicker3.css">
+<!--<script src="/static/js/jquery-1.11.1.js"></script>
+<script src="/static/js/jquery-2.1.1.js"></script>
+<script src="/static/js/jquery-ui-1.11.1.js"></script>
+&lt;!&ndash;<script src="/static/js/prettify.js"></script>&ndash;&gt;-->
+<script src="//code.jquery.com/jquery.min.js"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+<style>
+    input {
+        width: 300px;
+        border-top: none;
+        border-left: none;
+        border-right: none;
+        border-bottom: 1px solid #4f5050;"
+    }
+</style>
+<script>
+    $(function() {
+        //input을 datepicker로 선언
+        $("#datepicker").datepicker({
+            dateFormat: 'yymmdd' //Input Display Format 변경
+            ,showMonthAfterYear:true //년도 먼저 나오고, 뒤에 월 표시
+            ,buttonImage: "http://jqueryui.com/resources/demos/datepicker/images/calendar.gif" //버튼 이미지 경로
+            ,buttonImageOnly: true //기본 버튼의 회색 부분을 없애고, 이미지만 보이게 함
+            ,yearSuffix: "년" //달력의 년도 부분 뒤에 붙는 텍스트
+            ,monthNamesShort: ['1','2','3','4','5','6','7','8','9','10','11','12'] //달력의 월 부분 텍스트
+            ,monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'] //달력의 월 부분 Tooltip 텍스트
+            ,dayNamesMin: ['일','월','화','수','목','금','토'] //달력의 요일 부분 텍스트
+            ,dayNames: ['일요일','월요일','화요일','수요일','목요일','금요일','토요일'] //달력의 요일 부분 Tooltip 텍스트
+        });
+        if({{dno}} == 0) {
+            document.getElementById('dname').value = "경영지원본부";
+        }else if({{dno}} == 1) {
+            document.getElementById('dname').value = "GxP사업본부";
+        }else if({{dno}} == 2) {
+            document.getElementById('dname').value = "ICT사업본부";
+        }
+    });
+
+    function registerSubmit() {
+        let form = document.getElementById('registerForm');
+        let email = form.email.value;
+        if(!email) {
+            alert("이메일을 입력하세요.")
+            form.email.focus();
+            return false;
+        }
+        let exptext = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/;
+        if(!exptext.test(email)) {
+            alert("이메일 형식으로 입력하세요.")
+            form.email.focus();
+            return false;
+        }
+        if(!form.name.value) {
+            alert("이름을 입력하세요.")
+            form.name.focus();
+            return false;
+        }
+        let date = $("#datepicker").datepicker("getDate");
+        document.getElementById("datepickerDate").value = date;
+        form.submit();
+    }
+</script>
+<h2>직원 등록</h2>
+<hr>
+<form method="post" action="/inoxsoft/employee/register/submit" id="registerForm">
+    <table>
+        <tr style="height: 40px">
+            <th style="width: 100px;">이메일</th>
+            <td>
+                <input type="email" id="email" name="email">
+            </td>
+        </tr>
+        <tr style="height: 40px">
+            <th style="width: 100px;">이름</th>
+            <td>
+                <input type="text" id="name" name="name">
+            </td>
+        </tr>
+        <tr style="height: 40px">
+            <th style="width: 100px;">입사일</th>
+            <td>
+                <div style="display: inline-block;" id="datepicker"></div>
+                <div style="display: inline-block; position: relative; top: 150px;">
+                    &nbsp;&nbsp;날짜를 클릭하여 입사일 선택하세요.<br>
+                    <input type="hidden" name="entry_date" id="datepickerDate" value="">
+                </div>
+            </td>
+        </tr>
+        <tr style="height: 40px">
+            <th style="width: 100px;">부서</th>
+            <td>
+                <input type="text" value="" id="dname" name="dname" readonly>
+                <input type="hidden" value="{{dno}}" name="dno">
+            </td>
+        </tr>
+    </table>
+</form>
+<hr>
+<button style="width: 80px;height: 30px; position: relative; left: 800px;" onclick="return registerSubmit();">등록</button>
